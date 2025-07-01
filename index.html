@@ -1,8 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,
+                 viewport-fit=cover">     <!-- full height on iOS -->
+  <link  rel="stylesheet" href="style.css">
+  <title>Pet Pusha</title>
+
+  <!-- 1-liner that injects the WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
 <body>
+  <div id="root">
+    <img id="cat" src="assets/cat.png" alt="cat">
+    <div id="happinessBar"></div>          <!-- optional -->
+  </div>
 
-<h1>Pet Pusha</h1>
-
+  <script type="module" src="main.js"></script>
 </body>
 </html>
