@@ -1,18 +1,52 @@
-html,body {
+/* Telegram-aware base layer */
+html,
+body {
   height: 100%;
   margin: 0;
-  background: var(--tg-theme-bg-color);
+  background: var(--tg-theme-bg-color);   /* auto-switches dark / light */
   color: var(--tg-theme-text-color);
   font-family: system-ui, sans-serif;
 }
 
-/* Center the cat */
-#root {display:flex; flex-direction:column;
-       align-items:center; justify-content:center;
-       height:100dvh;   /* accounts for browser UI */
+/* Flex-box wrapper so the cat stays perfectly centered */
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;        /* accounts for mobile browser UI shrink */
 }
 
-/* optional wiggle animation when petted */
-@keyframes purr { 0%{transform:rotate(-2deg);} 100%{transform:rotate(2deg);} }
+/* -----  CAT  ----- */
 
-.pet { animation:purr 0.2s linear infinite alternate; }
+/* Responsive size: 70 % of the smaller viewport side (portrait or landscape) */
+#cat {
+  width: 70vmin;         /* vmin = min(viewport-width, viewport-height) */
+  height: auto;          /* keep aspect ratio */
+  pointer-events: none;  /* avoid accidental drag ghost image on long press */
+}
+
+/* Small wiggle animation triggered from JS */
+@keyframes purr {
+  0%   { transform: rotate(-2deg); }
+  100% { transform: rotate( 2deg); }
+}
+
+.pet {
+  animation: purr 0.2s linear infinite alternate;
+}
+
+/* -----  Happiness bar (optional)  ----- */
+
+#happinessBar {
+  width: 0%;
+  height: 8px;
+  margin-top: 16px;
+  border-radius: 4px;
+  background: var(--tg-theme-button-color, #0088cc);
+  transition: width 0.25s ease;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 8px;
+  color: #fff;
+}
