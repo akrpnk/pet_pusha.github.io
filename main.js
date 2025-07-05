@@ -20,7 +20,7 @@ tg.MainButton.onClick(async () => {
 
   // b) call your back-end
   try {
-    const res = await fetch('/pet', {
+    const res = await fetch('https://5b5c-81-215-218-49.ngrok-free.app/pet', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ initData: tg.initData })
@@ -35,7 +35,7 @@ tg.MainButton.onClick(async () => {
 
 // 5. On first load ask for current state
 (async () => {
-  const res = await fetch('/state', {
+  const res = await fetch('https://5b5c-81-215-218-49.ngrok-free.app/state', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({ initData: tg.initData })
