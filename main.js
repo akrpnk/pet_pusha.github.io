@@ -1,50 +1,53 @@
-// 0. Bring SDK into a handy variable
-const tg = window.Telegram.WebApp;
+const API_BASE = "https://7058-81-215-218-49.ngrok-free.app";
 
-// 1. Tell Telegram you are ready (shows the UI instantly)
+// 2.  Telegram Web-Apps SDK boot-strap
+const tg = window.Telegram.WebApp;
 tg.ready();
 
-// 2. Configure the MainButton
-tg.MainButton.setText('Pet 🐱');
+tg.MainButton.setText("Pet 🐱");
 tg.MainButton.show();
 
-// 3. Element refs
-const cat   = document.getElementById('cat');
-const bar   = document.getElementById('happinessBar');
+// 3.  DOM refs
+const cat = document.getElementById("cat");
+const bar = document.getElementById("happinessBar");
 
-// 4. Handle tap on MainButton
-tg.MainButton.onClick(async () => {
-  // a) simple visual feedback
-  cat.classList.add('pet');
-  setTimeout(() => cat.classList.remove('pet'), 600);
-
-  // b) call your back-end
-  try {
-    const res = await fetch('https://5b5c-81-215-218-49.ngrok-free.app/pet', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ initData: tg.initData })
-    });
-    const data = await res.json();        // {newHappiness: 87}
-
-    updateBar(data.newHappiness);
-  } catch (e) {
-    tg.showPopup({title:'Error', message:'Server unreachable 😿'});
-  }
-});
-
-// 5. On first load ask for current state
-(async () => {
-  const res = await fetch('https://5b5c-81-215-218-49.ngrok-free.app/state', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ initData: tg.initData })
-  });
-  const {happiness} = await res.json();
-  updateBar(happiness);
-})();
-
-function updateBar(val){
+// 4.  Helpers
+function updateBar(val) {
   bar.style.width = `${val}%`;
   bar.textContent = `Happiness ${val}%`;
 }
+
+// 5.  Ajax helpers – keep the fetch boilerplate in one place
+async function post(path, bodyObj) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bodyObj),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+// 6.  Initial state load
+(async () => {
+  try {
+    const { happiness } = await post("/state", { initData: tg.initData });
+    updateBar(happiness);
+  } catch (err) {
+    tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
+  }
+})();
+
+// 7.  MainButton handler
+tg.MainButton.onClick(async () => {
+  // quick visual feedback
+  cat.classList.add("pet");
+  setTimeout(() => cat.classList.remove("pet"), 600);
+
+  try {
+    const { happiness } = await post("/pet", { initData: tg.initData });
+    updateBar(happiness);
+  } catch (err) {
+    tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
+  }
+});
