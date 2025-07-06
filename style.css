@@ -24,6 +24,7 @@ body {
   width: 70vmin;         /* vmin = min(viewport-width, viewport-height) */
   height: auto;          /* keep aspect ratio */
   pointer-events: none;  /* avoid accidental drag ghost image on long press */
+  transition: opacity 0.2s ease-in-out;
 }
 
 /* Small wiggle animation triggered from JS */

@@ -7,6 +7,14 @@ tg.ready();
 tg.MainButton.setText("Pet 🐱");
 tg.MainButton.show();
 
+const CAT_SPRITES = {
+  angry:  "assets/angry_cat.png",
+  neutral:"assets/neutral_cat.png",
+  happy:  "assets/happy_cat.png",
+};
+
+Object.values(CAT_SPRITES).forEach(src => new Image().src = src);
+
 // 3.  DOM refs
 const cat = document.getElementById("cat");
 const bar = document.getElementById("happinessBar");
@@ -15,6 +23,25 @@ const bar = document.getElementById("happinessBar");
 function updateBar(val) {
   bar.style.width = `${val}%`;
   bar.textContent = `Happiness ${val}%`;
+
+  let src;
+  if (val < 30)            src = CAT_SPRITES.angry;
+  else if (val > 60)       src = CAT_SPRITES.happy;
+  else                     src = CAT_SPRITES.neutral;
+
+  if (cat.src.endsWith(src)) return;
+
+  cat.style.opacity = "0";
+  setTimeout(() => {
+    /* Wait until the new image is loaded
+       so we don’t show a blank frame */
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      cat.src = src;          // swap
+      cat.style.opacity = "1";    // fade-in
+    };
+  }, 200);
 }
 
 // 5.  Ajax helpers – keep the fetch boilerplate in one place
