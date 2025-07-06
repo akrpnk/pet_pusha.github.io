@@ -18,11 +18,7 @@ Object.values(CAT_SPRITES).forEach(src => new Image().src = src);
 // ────────────  AUDIO preload  ────────────
 const purrAudio = new Audio("assets/purr.mp3");
 purrAudio.preload = "auto";          // download as early as possible
-purrAudio.volume  = 0.8;             // slightly softer than full volume
-
-const tapAudio  = new Audio("assets/tap.mp3");
-tapAudio.preload = "auto";
-tapAudio.volume  = 0.4;
+purrAudio.volume  = 0.7;             // slightly softer than full volume
 
 // ────────────  HAPTIC helper  ────────────
 function haptic(type = "light") {
@@ -89,8 +85,6 @@ async function post(path, bodyObj) {
 // 7.  MainButton handler
 tg.MainButton.onClick(async () => {
   /* 1. local feedback as *soon* as user taps */
-  tapAudio.currentTime = 0;
-  tapAudio.play().catch(() => {/* ignore auto-play blocks */});
   haptic("light");
 
   /* 2. wiggle the cat (existing) */
