@@ -15,6 +15,27 @@ const CAT_SPRITES = {
 
 Object.values(CAT_SPRITES).forEach(src => new Image().src = src);
 
+// ────────────  AUDIO preload  ────────────
+const purrAudio = new Audio("assets/purr.mp3");
+purrAudio.preload = "auto";          // download as early as possible
+purrAudio.volume  = 0.8;             // slightly softer than full volume
+
+const tapAudio  = new Audio("assets/tap.mp3");
+tapAudio.preload = "auto";
+tapAudio.volume  = 0.4;
+
+// ────────────  HAPTIC helper  ────────────
+function haptic(type = "light") {
+  /* Available types: 'selection', 'impact', 'rigid', 'soft', or
+     notificationOccurred('success' | 'error' | 'warning')       */
+  const hf = window.Telegram?.WebApp?.HapticFeedback;
+  if (!hf) return;                           // desktop browser
+  try {
+    if (type === "light") hf.impactOccurred("light");
+    else if (type === "success") hf.notificationOccurred("success");
+  } catch { /* silently ignore unsupported devices */ }
+}
+
 // 3.  DOM refs
 const cat = document.getElementById("cat");
 const bar = document.getElementById("happinessBar");
@@ -67,14 +88,27 @@ async function post(path, bodyObj) {
 
 // 7.  MainButton handler
 tg.MainButton.onClick(async () => {
-  // quick visual feedback
+  /* 1. local feedback as *soon* as user taps */
+  tapAudio.currentTime = 0;
+  tapAudio.play().catch(() => {/* ignore auto-play blocks */});
+  haptic("light");
+
+  /* 2. wiggle the cat (existing) */
   cat.classList.add("pet");
   setTimeout(() => cat.classList.remove("pet"), 600);
 
+  /* 3. call backend */
   try {
     const { happiness } = await post("/pet", { initData: tg.initData });
     updateBar(happiness);
+
+    /* 4. happy-path sound & haptic */
+    purrAudio.currentTime = 0;
+    purrAudio.play().catch(() => {});
+    haptic("success");
+
   } catch (err) {
     tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
   }
 });
+
