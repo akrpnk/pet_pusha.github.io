@@ -109,12 +109,11 @@ tg.MainButton.onClick(async () => {
       haptic("success");
     }
     else {                             // we hit the rate-limit
-    tg.showPopup({ title: "Error", message: "429" });
-      // tg.MainButton.setParams({ color: "#888" });   // grey
-      // setTimeout(() => tg.MainButton.setParams({ color: "" }), 800);
+      tg.MainButton.setParams({ color: "#888" });   // grey
+      setTimeout(() => tg.MainButton.setParams({ color: "" }), 800);
     }
   } catch (err) {
-    tg.showPopup({ title: "Error", message: err.message });
+    tg.showPopup({ title: "Error", message: `${err.message}` });
   }
 });
 
