@@ -108,12 +108,6 @@ tg.MainButton.onClick(async () => {
       purrAudio.play().catch(() => {});
       haptic("success");
     }
-    else {                             // we hit the rate-limit
-      // const old_color = tg.MainButton.backgroundColor();
-      // tg.MainButton.setParams({ color: "#888" });   // grey
-      // setTimeout(() => tg.MainButton.setParams({ color: old_color }), 800);
-      tg.showPopup({ title: "Slow down", message: "Too many pets" });
-    }
   } catch (err) {
     tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
   }
