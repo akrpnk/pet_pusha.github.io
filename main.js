@@ -113,7 +113,7 @@ tg.MainButton.onClick(async () => {
       setTimeout(() => tg.MainButton.setParams({ color: "" }), 800);
     }
   } catch (err) {
-    tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
+    tg.showPopup({ title: "Error", message: err.message });
   }
 });
 
