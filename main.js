@@ -68,6 +68,7 @@ async function post(path, bodyObj) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyObj),
   });
+  if (res.status === 429) return null;
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
 }
@@ -75,8 +76,11 @@ async function post(path, bodyObj) {
 // 6.  Initial state load
 (async () => {
   try {
-    const { happiness } = await post("/state", { initData: tg.initData });
-    updateBar(happiness);
+    const result = await post("/state", { initData: tg.initData });
+    if (result) {                      // null means 429, do nothing
+      const { happiness } = result;
+      updateBar(happiness);
+    }
   } catch (err) {
     tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
   }
@@ -93,14 +97,21 @@ tg.MainButton.onClick(async () => {
 
   /* 3. call backend */
   try {
-    const { happiness } = await post("/pet", { initData: tg.initData });
-    updateBar(happiness);
+    const result = await post("/pet", { initData: tg.initData });
 
-    /* 4. happy-path sound & haptic */
-    purrAudio.currentTime = 0;
-    purrAudio.play().catch(() => {});
-    haptic("success");
+    if (result) {                      // null means 429, do nothing
+      const { happiness } = result;
+      updateBar(happiness);
 
+      /* 4. happy-path sound & haptic */
+      purrAudio.currentTime = 0;
+      purrAudio.play().catch(() => {});
+      haptic("success");
+    }
+    else {                             // we hit the rate-limit
+      tg.MainButton.setParams({ color: "#888" });   // grey
+      setTimeout(() => tg.MainButton.setParams({ color: "" }), 800);
+    }
   } catch (err) {
     tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
   }
