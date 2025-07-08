@@ -109,11 +109,12 @@ tg.MainButton.onClick(async () => {
       haptic("success");
     }
     else {                             // we hit the rate-limit
+      const old_color = tg.MainButton.backgroundColor();
       tg.MainButton.setParams({ color: "#888" });   // grey
-      setTimeout(() => tg.MainButton.setParams({ color: "" }), 800);
+      setTimeout(() => tg.MainButton.setParams({ color: old_color }), 800);
     }
   } catch (err) {
-    tg.showPopup({ title: "Error", message: `${err.message}` });
+    tg.showPopup({ title: "Error", message: "Server unreachable 😿" });
   }
 });
 
