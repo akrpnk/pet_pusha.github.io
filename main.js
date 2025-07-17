@@ -1,4 +1,4 @@
-const API_BASE = "https://7058-81-215-218-49.ngrok-free.app";
+const API_BASE = "https://pusha.onrender.com";
 
 // 2.  Telegram Web-Apps SDK boot-strap
 const tg = window.Telegram.WebApp;
